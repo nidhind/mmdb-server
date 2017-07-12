@@ -4,11 +4,12 @@ import "fmt"
 
 var i int = 0;
 
-func main(){
+func myMain(){
 	fmt.Println("worked")
 }
 
 func MyFunc(){
 	i++
 	fmt.Println("worked", i)
+	myMain()
 }

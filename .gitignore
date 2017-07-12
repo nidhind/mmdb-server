@@ -78,3 +78,7 @@ npm-debug.log
 .directory
 .nfs*
 *.rdb
+
+# Vendor package files except vendor.json
+vendor/*
+!vendor/vendor.json
