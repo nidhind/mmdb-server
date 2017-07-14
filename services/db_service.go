@@ -5,17 +5,23 @@ import (
 	"log"
 )
 
-var Session = mgo.Session{}
+const DB = "mmdb_dev"
+
+var Session *mgo.Session
 
 func InitMongo() bool {
 	url := "mongodb://localhost"
 	log.Println("Establishing MongoDB connection...")
-	session, err := mgo.Dial(url)
+	var err error
+	Session, err = mgo.Dial(url)
 	if err != nil {
 		log.Fatal("Cannot connect to MongoDB!")
 		return true
 	} else {
-		Session = *session
 		return false
 	}
+}
+
+func GetNewSession() mgo.Session {
+	return *Session.Copy()
 }

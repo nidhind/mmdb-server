@@ -1,21 +1,32 @@
 package utils
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"mmdb-server/data_models"
 	"mmdb-server/services"
+	"log"
+	"fmt"
 )
-
-var db = services.Session
 
 func Authenticate(c *gin.Context) {
 	credentials := data_models.LoginBody{}
 	c.BindJSON(&credentials)
 
-	query := struct {
+	query := data_models.LoginAuthQuery{
+		UserId:credentials.UserId,
+		Password:credentials.Password}
 
-	}{}
-	err := data_models.NewAPIError("INVALID_INPUT", "Invalid user name or password")
-	c.JSON(403, err)
+	var user data_models.UsersCollection
+
+	session := services.GetNewSession()
+	defer session.Close()
+
+	err := session.DB(services.DB).C("users").Find(query).One(&user)
+	if err != nil {
+		log.Println(err)
+		c.JSON(401, data_models.NewAPIError("INVALID_INPUT", "Invalid username or password"))
+	} else {
+		fmt.Println(user)
+		c.JSON(200, user)
+	}
 }
